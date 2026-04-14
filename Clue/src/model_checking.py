@@ -100,7 +100,6 @@ def get_all_models(atoms: set[str]) -> list[dict[str, bool]]:
 #-----------------------------------------------------------------------------------------------
 
 
-
 """
     CHECK_SATISFIABLE INSTRUCTIONS
 
@@ -255,9 +254,6 @@ def check_entailment(kb: list[Formula], query: Formula) -> bool:
     
     
     
-    
-
-
 def truth_table(formula: Formula) -> list[tuple[dict[str, bool], bool]]:
     """
     Genera la tabla de verdad completa de una formula.
