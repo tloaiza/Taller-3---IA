@@ -253,55 +253,75 @@ def push_negation_inward(formula: Formula) -> Formula:
 
 
 def distribute_or_over_and(formula: Formula) -> Formula:
-    """
-    Distribuye Or sobre And para obtener CNF.
+    if isinstance(formula, Atom):
+        return formula
 
-    Transformacion:
-        Or(A, And(B, C)) -> And(Or(A, B), Or(A, C))
+    if isinstance(formula, Not):
+        return formula
 
-    Debe aplicarse recursivamente hasta que no queden Or que contengan And.
+    if isinstance(formula, And):
+        return And(*(distribute_or_over_and(c) for c in formula.conjuncts))
 
-    Ejemplo:
-        >>> distribute_or_over_and(Or(Atom('p'), And(Atom('q'), Atom('r'))))
-        And(Or(Atom('p'), Atom('q')), Or(Atom('p'), Atom('r')))
+    if isinstance(formula, Or):
+        hijos = [distribute_or_over_and(d) for d in formula.disjuncts]
 
-    Hint: Para un nodo Or, primero distribuye recursivamente en los hijos.
-          Luego busca si algun hijo es un And. Si lo encuentras, aplica la
-          distribucion y recursa sobre el resultado (podria haber mas).
-          Para And, simplemente recursa sobre cada conjuncion.
-          Atomos y Not se retornan sin cambio.
+        and_index = None
+        for i, h in enumerate(hijos):
+            if isinstance(h, And):
+                and_index = i
+                break
 
-    Nota: Esta funcion se llama DESPUES de mover negaciones hacia adentro,
-          asi que solo veras Atom, Not(Atom), And y Or.
-    """
-    # === YOUR CODE HERE ===
-    raise NotImplementedError("Implementa distribute_or_over_and()")
-    # === END YOUR CODE ===
+        if and_index is None:
+            return Or(*hijos)
+
+        and_child = hijos[and_index]
+        others = hijos[:and_index] + hijos[and_index + 1:]
+
+        nuevas_conjunciones = []
+        for c in and_child.conjuncts:
+            nuevas_conjunciones.append(
+                distribute_or_over_and(Or(c, *others))
+            )
+
+        return And(*nuevas_conjunciones)
+
+    return formula
 
 
 def flatten(formula: Formula) -> Formula:
-    """
-    Aplana conjunciones y disyunciones anidadas.
+    if isinstance(formula, Atom):
+        return formula
 
-    Transformaciones:
-        And(And(a, b), c) -> And(a, b, c)
-        Or(Or(a, b), c)   -> Or(a, b, c)
+    if isinstance(formula, Not):
+        return Not(flatten(formula.operand))
 
-    Debe aplicarse recursivamente.
+    if isinstance(formula, And):
+        nuevos = []
+        for c in formula.conjuncts:
+            c_flat = flatten(c)
+            if isinstance(c_flat, And):
+                nuevos.extend(c_flat.conjuncts)
+            else:
+                nuevos.append(c_flat)
 
-    Ejemplo:
-        >>> flatten(And(And(Atom('a'), Atom('b')), Atom('c')))
-        And(Atom('a'), Atom('b'), Atom('c'))
-        >>> flatten(Or(Or(Atom('a'), Atom('b')), Atom('c')))
-        Or(Atom('a'), Atom('b'), Atom('c'))
+        if len(nuevos) == 1:
+            return nuevos[0]
+        return And(*nuevos)
 
-    Hint: Para un And, recorre cada hijo. Si un hijo tambien es And,
-          agrega sus conjuncts directamente en vez de agregar el And.
-          Igual para Or con sus disjuncts.
-          Si al final solo queda 1 elemento, retornalo directamente.
-    """
-    # === YOUR CODE HERE ===
-    raise NotImplementedError("Implementa flatten()")
+    if isinstance(formula, Or):
+        nuevos = []
+        for d in formula.disjuncts:
+            d_flat = flatten(d)
+            if isinstance(d_flat, Or):
+                nuevos.extend(d_flat.disjuncts)
+            else:
+                nuevos.append(d_flat)
+
+        if len(nuevos) == 1:
+            return nuevos[0]
+        return Or(*nuevos)
+
+    return formula
     # === END YOUR CODE ===
 
 

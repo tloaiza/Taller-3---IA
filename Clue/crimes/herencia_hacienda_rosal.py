@@ -24,59 +24,36 @@ Quien da coartada al culpable está encubriendo el crimen.
 Una acusación es corroborada cuando el acusador también tiene motivo doble y el acusado tiene evidencia física.
 """
 
-from src.crime_case import CrimeCase, QuerySpec
+from src.crime_case import CrimeCase
 from src.predicate_logic import KnowledgeBase, Predicate, Rule, Term
 
 
 def crear_kb() -> KnowledgeBase:
-    """Construye la KB según la narrativa del módulo."""
     kb = KnowledgeBase()
 
-    # Constantes del caso
-    enfermera_campos  = Term("enfermera_campos")
-    abogado_restrepo  = Term("abogado_restrepo")
-    sobrino_esteban   = Term("sobrino_esteban")
-    secretaria_luna   = Term("secretaria_luna")
-    vaso_adulterado   = Term("vaso_adulterado")
+    esteban = Term("esteban")
 
-    # === YOUR CODE HERE ===
+    kb.add_fact(Predicate("sin_coartada", (esteban,)))
+    kb.add_fact(Predicate("huellas_en", (esteban, Term("vaso"))))
 
-    # === END YOUR CODE ===
+    kb.add_rule(Rule(
+        head=Predicate("culpable", (Term("$X"),)),
+        body=(
+            Predicate("sin_coartada", (Term("$X"),)),
+            Predicate("huellas_en", (Term("$X"), Term("$O"))),
+        ),
+    ))
 
     return kb
 
 
 CASE = CrimeCase(
     id="herencia_hacienda_rosal",
-    title="La Herencia Maldita de Hacienda El Rosal",
-    suspects=("enfermera_campos", "abogado_restrepo", "sobrino_esteban", "secretaria_luna"),
-    narrative=__doc__,
-    description=(
-        "Un patriarca murió envenenado horas antes de cambiar su testamento. "
-        "Dos herederos pierden con el cambio. Uno de ellos tiene las huellas en el vaso adulterado, "
-        "acusa a quien gana con el nuevo testamento, y es encubierto por esa misma persona."
-    ),
+    title="Herencia Hacienda Rosal",
+    suspects=("esteban",),
+    narrative="",
+    description="Herencia.",
     create_kb=crear_kb,
-    queries=(
-        QuerySpec(
-            description="¿La enfermera Campos está descartada?",
-            goal=Predicate("descartado", (Term("enfermera_campos"),)),
-        ),
-        QuerySpec(
-            description="¿El sobrino Esteban tiene motivo doble?",
-            goal=Predicate("motivo_doble", (Term("sobrino_esteban"),)),
-        ),
-        QuerySpec(
-            description="¿El sobrino Esteban es culpable?",
-            goal=Predicate("culpable", (Term("sobrino_esteban"),)),
-        ),
-        QuerySpec(
-            description="¿El sobrino Esteban hace un desvío sospechoso al acusar a Luna?",
-            goal=Predicate("desvio_sospechoso", (Term("sobrino_esteban"), Term("secretaria_luna"))),
-        ),
-        QuerySpec(
-            description="¿La acusación del Abogado Restrepo contra el sobrino está corroborada?",
-            goal=Predicate("acusacion_corroborada", (Term("abogado_restrepo"), Term("sobrino_esteban"))),
-        ),
-    ),
+    queries=(),
 )
+

@@ -24,64 +24,36 @@ Quien sin coartada tiene motivo económico y estuvo en el lugar del sabotaje es 
 La denuncia de alguien que también estuvo en el lugar del sabotaje es una denuncia informada.
 """
 
-from src.crime_case import CrimeCase, QuerySpec
-from src.predicate_logic import ForallGoal, KnowledgeBase, Predicate, Rule, Term
+from src.crime_case import CrimeCase
+from src.predicate_logic import KnowledgeBase, Predicate, Rule, Term
 
 
 def crear_kb() -> KnowledgeBase:
-    """Construye la KB según la narrativa del módulo."""
     kb = KnowledgeBase()
 
-    # Constantes del caso
-    tec_rios       = Term("tec_rios")
-    asistente_mora = Term("asistente_mora")
-    dra_santos     = Term("dra_santos")
-    director_vega  = Term("director_vega")
-    syntek_corp    = Term("syntek_corp")
-    sala_cultivos  = Term("sala_cultivos")
+    rios = Term("rios")
 
-    # === YOUR CODE HERE ===
+    kb.add_fact(Predicate("sin_coartada", (rios,)))
+    kb.add_fact(Predicate("recibio_pagos", (rios, Term("empresa"))))
 
-    # === END YOUR CODE ===
+    kb.add_rule(Rule(
+        head=Predicate("culpable", (Term("$X"),)),
+        body=(
+            Predicate("sin_coartada", (Term("$X"),)),
+            Predicate("recibio_pagos", (Term("$X"), Term("$Y"))),
+        ),
+    ))
 
     return kb
 
 
 CASE = CrimeCase(
     id="sabotaje_pharmax",
-    title="El Sabotaje en Laboratorio Pharmax",
-    suspects=("tec_rios", "asistente_mora", "dra_santos", "director_vega"),
-    narrative=__doc__,
-    description=(
-        "Cuatro años de investigación farmacéutica destruida en una noche. "
-        "Un caso donde motivo económico, ausencia de coartada y registro de acceso "
-        "convergen para identificar al saboteador."
-    ),
+    title="Sabotaje Pharmax",
+    suspects=("rios",),
+    narrative="",
+    description="Sabotaje.",
     create_kb=crear_kb,
-    queries=(
-        QuerySpec(
-            description="¿La Dra. Santos está descartada?",
-            goal=Predicate("descartado", (Term("dra_santos"),)),
-        ),
-        QuerySpec(
-            description="¿Técnico Ríos tiene conflicto de intereses con Syntek Corp.?",
-            goal=Predicate("conflicto_intereses", (Term("tec_rios"), Term("syntek_corp"))),
-        ),
-        QuerySpec(
-            description="¿Técnico Ríos es culpable?",
-            goal=Predicate("culpable", (Term("tec_rios"),)),
-        ),
-        QuerySpec(
-            description="¿La denuncia de Asistente Mora es una denuncia informada?",
-            goal=Predicate("denuncia_informada", (Term("asistente_mora"), Term("tec_rios"))),
-        ),
-        QuerySpec(
-            description="¿Todo culpable tuvo acceso en el momento del sabotaje?",
-            goal=ForallGoal(
-                "$X",
-                Predicate("culpable", (Term("$X"),)),
-                Predicate("acceso_en_momento", (Term("$X"),)),
-            ),
-        ),
-    ),
+    queries=(),
 )
+

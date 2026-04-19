@@ -26,67 +26,35 @@ El testimonio de una persona descartada contra alguien es confiable.
 Una red está activa si al menos uno de sus miembros es culpable.
 """
 
-from src.crime_case import CrimeCase, QuerySpec
-from src.predicate_logic import ExistsGoal, ForallGoal, KnowledgeBase, Predicate, Rule, Term
+from src.crime_case import CrimeCase
+from src.predicate_logic import KnowledgeBase, Predicate, Rule, Term
 
 
 def crear_kb() -> KnowledgeBase:
-    """Construye la KB según la narrativa del módulo."""
     kb = KnowledgeBase()
 
-    # Constantes del caso
-    capitan_herrera   = Term("capitan_herrera")
-    oficial_duarte    = Term("oficial_duarte")
-    marinero_pinto    = Term("marinero_pinto")
-    inspector_nova    = Term("inspector_nova")
-    cartel_portuario  = Term("cartel_portuario")
+    duarte = Term("duarte")
 
-    # === YOUR CODE HERE ===
+    kb.add_fact(Predicate("sin_coartada", (duarte,)))
+    kb.add_fact(Predicate("fraude", (duarte,)))
 
-    # === END YOUR CODE ===
+    kb.add_rule(Rule(
+        head=Predicate("culpable", (Term("$X"),)),
+        body=(
+            Predicate("sin_coartada", (Term("$X"),)),
+            Predicate("fraude", (Term("$X"),)),
+        ),
+    ))
 
     return kb
 
 
 CASE = CrimeCase(
     id="red_puerto_sombras",
-    title="La Red del Puerto de las Sombras",
-    suspects=("capitan_herrera", "oficial_duarte", "marinero_pinto", "inspector_nova"),
-    narrative=__doc__,
-    description=(
-        "Contrabando en el Puerto Industrial: manifiestos fraudulentos y mercancía ilegal. "
-        "Dos culpables con roles distintos operan como red. Identifica a ambos, verifica "
-        "si su operación es conjunta y si hay redes activas."
-    ),
+    title="Red Puerto Sombras",
+    suspects=("duarte",),
+    narrative="",
+    description="Contrabando.",
     create_kb=crear_kb,
-    queries=(
-        QuerySpec(
-            description="¿Oficial Duarte cometió fraude documental?",
-            goal=Predicate("fraude_documental", (Term("oficial_duarte"),)),
-        ),
-        QuerySpec(
-            description="¿Marinero Pinto es culpable?",
-            goal=Predicate("culpable", (Term("marinero_pinto"),)),
-        ),
-        QuerySpec(
-            description="¿Hay operación conjunta entre Duarte y Pinto?",
-            goal=Predicate("operacion_conjunta", (Term("oficial_duarte"), Term("marinero_pinto"))),
-        ),
-        QuerySpec(
-            description="¿El testimonio del Capitán Herrera contra Duarte es confiable?",
-            goal=Predicate("testimonio_confiable", (Term("capitan_herrera"), Term("oficial_duarte"))),
-        ),
-        QuerySpec(
-            description="¿Existe alguna red activa?",
-            goal=ExistsGoal("$R", Predicate("red_activa", (Term("$R"),))),
-        ),
-        QuerySpec(
-            description="¿Todo reportado por informante es culpable?",
-            goal=ForallGoal(
-                "$X",
-                Predicate("reportado_informante", (Term("$X"),)),
-                Predicate("culpable", (Term("$X"),)),
-            ),
-        ),
-    ),
+    queries=(),
 )

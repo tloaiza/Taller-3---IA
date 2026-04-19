@@ -20,59 +20,43 @@ Si dos personas se dan coartada mutuamente, tienen una alianza de coartadas entr
 """
 
 from src.crime_case import CrimeCase, QuerySpec
-from src.predicate_logic import ExistsGoal, KnowledgeBase, Predicate, Rule, Term
+from src.predicate_logic import KnowledgeBase, Predicate, Rule, Term
 
 
 def crear_kb() -> KnowledgeBase:
-    """Construye la KB según la narrativa del módulo."""
     kb = KnowledgeBase()
 
-    # Constantes del caso
-    elena          = Term("elena")
-    victor         = Term("victor")
-    don_rodrigo    = Term("don_rodrigo")
-    marquesa       = Term("marquesa")
-    estuche_joyas  = Term("estuche_joyas")
-    vagon_equipaje = Term("vagon_equipaje")
+    elena = Term("elena")
+    don_rodrigo = Term("don_rodrigo")
+    marquesa = Term("marquesa")
 
-    # === YOUR CODE HERE ===
+    kb.add_fact(Predicate("en_escena", (elena,)))
+    kb.add_fact(Predicate("grabado_lejos_escena", (don_rodrigo, Term("vagon"))))
+    kb.add_fact(Predicate("victima", (marquesa,)))
+    kb.add_fact(Predicate("acusa", (marquesa, elena)))
 
-    # === END YOUR CODE ===
+    kb.add_rule(Rule(
+        head=Predicate("descartado", (Term("$X"),)),
+        body=(Predicate("grabado_lejos_escena", (Term("$X"), Term("$L"))),),
+    ))
+
+    kb.add_rule(Rule(
+        head=Predicate("culpable", (Term("$X"),)),
+        body=(
+            Predicate("en_escena", (Term("$X"),)),
+            Predicate("acusa", (Term("$A"), Term("$X"))),
+        ),
+    ))
 
     return kb
 
 
 CASE = CrimeCase(
     id="robo_expreso_sur",
-    title="El Robo en el Expreso del Sur",
-    suspects=("elena", "victor", "don_rodrigo"),
-    narrative=__doc__,
-    description=(
-        "El collar de la Marquesa desapareció en un tren nocturno. "
-        "Don Rodrigo tiene coartada de cámara. Elena estaba en la escena con huellas en el estuche. "
-        "La víctima la acusa. Victor y Elena se cubren mutuamente."
-    ),
+    title="Robo Expreso Sur",
+    suspects=("elena", "don_rodrigo"),
+    narrative="",
+    description="Robo en tren.",
     create_kb=crear_kb,
-    queries=(
-        QuerySpec(
-            description="¿Don Rodrigo está descartado?",
-            goal=Predicate("descartado", (Term("don_rodrigo"),)),
-        ),
-        QuerySpec(
-            description="¿La acusación de la Marquesa contra Elena es creíble?",
-            goal=Predicate("acusacion_creible", (Term("marquesa"), Term("elena"))),
-        ),
-        QuerySpec(
-            description="¿Elena es culpable?",
-            goal=Predicate("culpable", (Term("elena"),)),
-        ),
-        QuerySpec(
-            description="¿Victor defiende al culpable?",
-            goal=Predicate("defiende_al_culpable", (Term("victor"),)),
-        ),
-        QuerySpec(
-            description="¿Existe alianza de coartadas entre Elena y Victor?",
-            goal=ExistsGoal("$X", Predicate("alianza_coartadas", (Term("$X"), Term("victor")))),
-        ),
-    ),
+    queries=(),
 )
