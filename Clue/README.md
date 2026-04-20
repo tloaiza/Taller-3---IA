@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Taller de Logica — Investigacion Criminalistica
 
 Resuelve casos criminales usando logica proposicional y de predicados.
@@ -54,16 +53,3 @@ NO son evaluados — la calificacion se basa exclusivamente en las pruebas unita
 
 Si no tienes experiencia con programacion orientada a objetos, empieza por
 `notebooks/guia_objetos_python.ipynb`.
-=======
-TALLER 3 - INTELIGENCIA ARTIFICIAL
-
-Integrantes:
-
-Daniela Munar Gonzáles - 202311392
-
-Juan Sebastián Parra Casas – 202411217
-
-Camilo Puerto Peña - 202211362
-
-Tomas Loaiza Rodríguez – 202512388
->>>>>>> 208ca8717af7ec4485539dd0c241e5b970a83efb
