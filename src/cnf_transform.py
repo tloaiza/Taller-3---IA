@@ -351,3 +351,4 @@ def to_cnf(formula: Formula) -> Formula:
     formula = distribute_or_over_and(formula)
     formula = flatten(formula)
     return formula
+
