@@ -29,7 +29,79 @@ Una red está activa si al menos uno de sus miembros es culpable.
 from src.crime_case import CrimeCase, QuerySpec
 from src.predicate_logic import ExistsGoal, ForallGoal, KnowledgeBase, Predicate, Rule, Term
 
+"""
+------------------------------- mi version -----------------------------------
 
+def crear_kb() -> KnowledgeBase:
+    kb = KnowledgeBase()
+
+    duarte = Term("oficial_duarte")
+    pinto = Term("marinero_pinto")
+    herrera = Term("capitan_herrera")
+    nova = Term("inspector_nova")
+    cartel = Term("cartel_portuario")
+
+    kb.add_fact(Predicate("registro_fuera_puerto", (herrera,)))
+    kb.add_fact(Predicate("registro_fuera_puerto", (nova,)))
+
+    kb.add_fact(Predicate("firma_manifiestos_fraudulentos", (duarte,)))
+    kb.add_fact(Predicate("sin_coartada", (duarte,)))
+
+    kb.add_fact(Predicate("acceso_bodega", (pinto,)))
+    kb.add_fact(Predicate("visto_introduciendo_mercancia_ilegal", (pinto,)))
+    kb.add_fact(Predicate("sin_coartada", (pinto,)))
+
+    kb.add_fact(Predicate("pertenece_cartel", (duarte, cartel)))
+    kb.add_fact(Predicate("pertenece_cartel", (pinto, cartel)))
+
+    kb.add_rule(Rule(
+        Predicate("descartado", (Term("$X"),)),
+        (Predicate("registro_fuera_puerto", (Term("$X"),)),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("fraude_documental", (Term("$X"),)),
+        (Predicate("firma_manifiestos_fraudulentos", (Term("$X"),)),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("introduce_contrabando", (Term("$X"),)),
+        (
+            Predicate("acceso_bodega", (Term("$X"),)),
+            Predicate("visto_introduciendo_mercancia_ilegal", (Term("$X"),)),
+        ),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("culpable", (Term("$X"),)),
+        (
+            Predicate("fraude_documental", (Term("$X"),)),
+            Predicate("sin_coartada", (Term("$X"),)),
+        ),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("culpable", (Term("$X"),)),
+        (
+            Predicate("introduce_contrabando", (Term("$X"),)),
+            Predicate("sin_coartada", (Term("$X"),)),
+        ),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("comparten_red", (Term("$X"), Term("$Y"))),
+        (
+            Predicate("pertenece_cartel", (Term("$X"), Term("$R"))),
+            Predicate("pertenece_cartel", (Term("$Y"), Term("$R"))),
+        ),
+    ))
+
+    return kb
+
+    promt
+    Podrías ayudarme a modelar relaciones entre múltiples culpables dentro de una red usando lógica de predicados. 
+
+"""
 def crear_kb() -> KnowledgeBase:
     """Construye la KB según la narrativa del módulo."""
     kb = KnowledgeBase()

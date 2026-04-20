@@ -22,6 +22,72 @@ Si dos personas se dan coartada mutuamente, tienen una alianza de coartadas entr
 from src.crime_case import CrimeCase, QuerySpec
 from src.predicate_logic import ExistsGoal, KnowledgeBase, Predicate, Rule, Term
 
+"""
+----------------------------------- versión mia -----------------------------------
+def crear_kb() -> KnowledgeBase:
+    kb = KnowledgeBase()
+
+    elena = Term("elena")
+    victor = Term("victor")
+    don_rodrigo = Term("don_rodrigo")
+    marquesa = Term("marquesa")
+    vagon_equipaje = Term("vagon_equipaje")
+
+    kb.add_fact(Predicate("en_escena", (elena,)))
+    kb.add_fact(Predicate("grabado_lejos_escena", (don_rodrigo, vagon_equipaje)))
+    kb.add_fact(Predicate("victima", (marquesa,)))
+    kb.add_fact(Predicate("acusa", (marquesa, elena)))
+
+    kb.add_fact(Predicate("da_coartada", (victor, elena)))
+    kb.add_fact(Predicate("da_coartada", (elena, victor)))
+
+    kb.add_rule(Rule(
+        Predicate("descartado", (Term("$X"),)),
+        (Predicate("grabado_lejos_escena", (Term("$X"), Term("$L"))),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("testigo_imparcial", (Term("$X"),)),
+        (Predicate("victima", (Term("$X"),)),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("acusacion_creible", (Term("$X"), Term("$Y"))),
+        (
+            Predicate("testigo_imparcial", (Term("$X"),)),
+            Predicate("acusa", (Term("$X"), Term("$Y"))),
+        ),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("culpable", (Term("$X"),)),
+        (
+            Predicate("en_escena", (Term("$X"),)),
+            Predicate("acusacion_creible", (Term("$A"), Term("$X"))),
+        ),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("defiende_al_culpable", (Term("$X"),)),
+        (
+            Predicate("da_coartada", (Term("$X"), Term("$Y"))),
+            Predicate("culpable", (Term("$Y"),)),
+        ),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("alianza_coartadas", (Term("$X"), Term("$Y"))),
+        (
+            Predicate("da_coartada", (Term("$X"), Term("$Y"))),
+            Predicate("da_coartada", (Term("$Y"), Term("$X"))),
+        ),
+    ))
+
+    return kb
+
+    promt
+    Podrías ayudarme a modelar este caso con lógica de predicados y asegurar que las reglas representen bien la narrativa. 
+"""
 
 def crear_kb() -> KnowledgeBase:
     """Construye la KB según la narrativa del módulo."""

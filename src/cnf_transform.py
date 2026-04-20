@@ -251,7 +251,42 @@ def push_negation_inward(formula: Formula) -> Formula:
             return formula
     # === END YOUR CODE ===
 
+"""
+==================================================================Mi version del codigo-------------------------------------
+def distribute_or_over_and(formula: Formula) -> Formula:
+    if isinstance(formula, Atom):
+        return formula
 
+    if isinstance(formula, Not):
+        return formula
+
+    if isinstance(formula, And):
+        nuevos = []
+        for c in formula.conjuncts:
+            nuevos.append(distribute_or_over_and(c))
+        return And(*nuevos)
+
+    if isinstance(formula, Or):
+        nuevos = []
+        for d in formula.disjuncts:
+            nuevos.append(distribute_or_over_and(d))
+
+        for i in range(len(nuevos)):
+            if isinstance(nuevos[i], And):
+                partes = []
+                for c in nuevos[i].conjuncts:
+                    otros = nuevos[:i] + nuevos[i + 1:]
+                    partes.append(distribute_or_over_and(Or(c, *otros)))
+                return And(*partes)
+
+        return Or(*nuevos)
+
+    return formula
+
+    prompt para la IA
+    Podrías ayudarme a optimizar este código, que sea más corto y que solucione algunos problemas que tiene con algunos test. 
+
+"""
 def distribute_or_over_and(formula: Formula) -> Formula:
     if isinstance(formula, Atom):
         return formula
@@ -287,6 +322,50 @@ def distribute_or_over_and(formula: Formula) -> Formula:
 
     return formula
 
+
+
+"""
+-------------------------------------------------------------------Mi version del codigo-------------------------------------
+def flatten(formula: Formula) -> Formula:
+    if isinstance(formula, Atom):
+        return formula
+
+    if isinstance(formula, Not):
+        return Not(flatten(formula.operand))
+
+    if isinstance(formula, And):
+        nuevos = []
+        for c in formula.conjuncts:
+            res = flatten(c)
+            if isinstance(res, And):
+                for x in res.conjuncts:
+                    nuevos.append(x)
+            else:
+                nuevos.append(res)
+
+        if len(nuevos) == 1:
+            return nuevos[0]
+        return And(*nuevos)
+
+    if isinstance(formula, Or):
+        nuevos = []
+        for d in formula.disjuncts:
+            res = flatten(d)
+            if isinstance(res, Or):
+                for x in res.disjuncts:
+                    nuevos.append(x)
+            else:
+                nuevos.append(res)
+
+        if len(nuevos) == 1:
+            return nuevos[0]
+        return Or(*nuevos)
+
+    return formula
+
+    prompt para la IA
+    Podrías ayudarme a optimizar este código, que sea más corto y que solucione algunos problemas que tiene con algunos test. 
+"""
 
 def flatten(formula: Formula) -> Formula:
     if isinstance(formula, Atom):

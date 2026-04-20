@@ -28,6 +28,78 @@ from src.crime_case import CrimeCase, QuerySpec
 from src.predicate_logic import ForallGoal, KnowledgeBase, Predicate, Rule, Term
 
 
+"""
+------------------------------------ mi versión -----------------------------------
+def crear_kb() -> KnowledgeBase:
+    kb = KnowledgeBase()
+
+    tec_rios = Term("tec_rios")
+    asistente_mora = Term("asistente_mora")
+    dra_santos = Term("dra_santos")
+    director_vega = Term("director_vega")
+    syntek_corp = Term("syntek_corp")
+    sala_cultivos = Term("sala_cultivos")
+
+    kb.add_fact(Predicate("doc_ausencia_pais", (dra_santos,)))
+    kb.add_fact(Predicate("registro_conferencia", (director_vega,)))
+
+    kb.add_fact(Predicate("sin_coartada", (tec_rios,)))
+    kb.add_fact(Predicate("sin_coartada", (asistente_mora,)))
+
+    kb.add_fact(Predicate("registro_acceso", (tec_rios, sala_cultivos)))
+    kb.add_fact(Predicate("registro_acceso", (asistente_mora, sala_cultivos)))
+
+    kb.add_fact(Predicate("recibio_pagos", (tec_rios, syntek_corp)))
+    kb.add_fact(Predicate("empresa_beneficiada", (syntek_corp,)))
+
+    kb.add_rule(Rule(
+        Predicate("coartada_verificada", (Term("$X"),)),
+        (Predicate("doc_ausencia_pais", (Term("$X"),)),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("coartada_verificada", (Term("$X"),)),
+        (Predicate("registro_conferencia", (Term("$X"),)),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("descartado", (Term("$X"),)),
+        (Predicate("coartada_verificada", (Term("$X"),)),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("conflicto_intereses", (Term("$X"), Term("$Y"))),
+        (
+            Predicate("recibio_pagos", (Term("$X"), Term("$Y"))),
+            Predicate("empresa_beneficiada", (Term("$Y"),)),
+        ),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("motivo_economico", (Term("$X"),)),
+        (Predicate("conflicto_intereses", (Term("$X"), Term("$Y"))),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("acceso_en_momento", (Term("$X"),)),
+        (Predicate("registro_acceso", (Term("$X"), Term("$L"))),),
+    ))
+
+    kb.add_rule(Rule(
+        Predicate("culpable", (Term("$X"),)),
+        (
+            Predicate("sin_coartada", (Term("$X"),)),
+            Predicate("motivo_economico", (Term("$X"),)),
+            Predicate("acceso_en_momento", (Term("$X"),)),
+        ),
+    ))
+
+    return kb
+
+    promt 
+    Podrías ayudarme a combinar correctamente motivo, acceso y coartada en reglas de lógica de predicados. 
+
+"""
 def crear_kb() -> KnowledgeBase:
     """Construye la KB según la narrativa del módulo."""
     kb = KnowledgeBase()
